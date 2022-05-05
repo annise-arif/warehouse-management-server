@@ -27,6 +27,22 @@ async function run() {
       res.send(services);
     });
 
+    // post
+    app.post('/service', async(req, res) =>{
+      const newService = req.body;
+      const result = await serviceCollection.insertOne(newService);
+      res.send(result);
+    });
+
+    // get service by email
+    app.get("/serviceByEmail/:email", async (req, res) => {
+      const email = req.params.email;
+      const query = {email: email}
+      const cursor = serviceCollection.find(query);
+      const services = await cursor.toArray();
+      res.send(services);
+    });
+
     app.get('/service/:id', async(req, res) =>{
       const id = req.params.id;
       const query = {_id: ObjectId(id)};
@@ -34,12 +50,42 @@ async function run() {
       res.send(service);
     });
 
-    // post
-    app.post('/service', async(req, res) =>{
-      const newService = req.body;
-      const result = await serviceCollection.insertOne(newService);
+    // Delete my items
+    app.delete('/service/:id', async(req, res) =>{
+      const id = req.params.id;
+      const query = {_id: ObjectId(id)};
+      const result = await serviceCollection.deleteOne(query);
       res.send(result);
-    })
+    });
+    
+
+    // use put for update quantity
+    app.put('/service/:id', async(req, res) =>{
+      const id = req.params.id;
+      const {quantity} = req.body;
+      const filter = {_id: ObjectId(id)};
+      const options = { upsert: true };
+      const updatedDoc = {
+        $set: {quantity: quantity}
+      };
+      const result = await serviceCollection.updateOne(filter, updatedDoc, options);
+      res.send(result);
+    });
+    
+    // use put for delivered 1service per click
+    app.put('/delivered/:id', async(req, res) =>{
+      const id = req.params.id;
+      const {quantity} = req.body;
+      const filter = {_id: ObjectId(id)};
+      const options = { upsert: true };
+      const updatedDoc = {
+        $set: {quantity: quantity}
+      };
+      const result = await serviceCollection.updateOne(filter, updatedDoc, options);
+      res.send(result);
+    });
+
+    
   } 
   finally {
   }
