@@ -19,7 +19,7 @@ async function run() {
   try {
     await client.connect();
     const serviceCollection = client.db("wareHouse").collection("carService");
-
+    //data get from mongodb database
     app.get("/service", async (req, res) => {
       const query = {};
       const cursor = serviceCollection.find(query);
