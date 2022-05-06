@@ -50,7 +50,7 @@ async function run() {
       res.send(service);
     });
 
-    // Delete my items
+    // Delete my items and manage items
     app.delete('/service/:id', async(req, res) =>{
       const id = req.params.id;
       const query = {_id: ObjectId(id)};
