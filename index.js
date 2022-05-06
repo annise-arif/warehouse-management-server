@@ -72,10 +72,10 @@ async function run() {
       res.send(result);
     });
     
-    // use put for delivered 1service per click
+    // use put method for delivered 1service per click
     app.put('/delivered/:id', async(req, res) =>{
-      const id = req.params.id;
-      const {quantity} = req.body;
+      const id = req?.params?.id;
+      const {quantity} = req?.body;
       const filter = {_id: ObjectId(id)};
       const options = { upsert: true };
       const updatedDoc = {
