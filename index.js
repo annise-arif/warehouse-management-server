@@ -4,6 +4,7 @@ const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 require("dotenv").config();
 const port = process.env.PORT || 5000;
 const app = express();
+const jwt = require('jsonwebtoken');
 
 //middleware
 app.use(cors());
@@ -19,6 +20,18 @@ async function run() {
   try {
     await client.connect();
     const serviceCollection = client.db("wareHouse").collection("carService");
+    
+
+   // jsonwebtoken access api
+   app.post('/login', async(req, res) =>{
+     const user = req.body;
+     const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
+       expiresIn: '20d'
+     });
+     res.send({accessToken});
+   }) 
+    
+
     //data get from mongodb database
     app.get("/service", async (req, res) => {
       const query = {};
